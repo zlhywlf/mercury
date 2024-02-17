@@ -1,4 +1,5 @@
 """创建 app"""
+
 from flask import Flask
 
 app = Flask("mercury")
@@ -8,6 +9,7 @@ app = Flask("mercury")
 def hello_world() -> str:
     """hello world
 
-    Returns: str
+    Returns:
+        str: hello world
     """
     return "<h1>Hello, World!</h1>"

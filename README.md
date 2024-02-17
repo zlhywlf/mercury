@@ -31,6 +31,7 @@ mercury
 
 ```shell
 conda create -y -n mercury python=3.12
+conda activate mercury
 ```
 
 ### 必要依赖
@@ -38,7 +39,6 @@ conda create -y -n mercury python=3.12
 - [Flask](https://flask.palletsprojects.com/)
 
 ```shell
-conda activate mercury
 pip install Flask
 ```
 
@@ -48,6 +48,5 @@ pip install Flask
 - [pylint](https://pylint.readthedocs.io/)
 
 ```shell
-conda activate mercury
 pip install pytest pylint
 ```

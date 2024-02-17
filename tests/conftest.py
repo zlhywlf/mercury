@@ -1,20 +1,36 @@
 """pytest 全局对象"""
+
+from collections.abc import Generator
+from typing import Any
 from pytest import fixture
 from flask import Flask
-from flask.testing import Client
+from flask.testing import FlaskClient
 from mercury.web.flask.create_app import app
 
 
-@fixture()
-def flask_app() -> Flask:
-    """flask app 实例"""
-    app.config.update({
-        "TESTING": True,
-    })
+@fixture(name="flask_app_")
+def flask_app() -> Generator[Flask, Any, None]:
+    """flask app 实例
+
+    Yields:
+        Generator[Flask, Any, None]: app 实例生成器
+    """
+    app.config.update(
+        {
+            "TESTING": True,
+        }
+    )
     yield app
 
 
 @fixture()
-def flask_client(flask_app: Flask) -> Client:
-    """flask client 实例"""
-    return flask_app.test_client()
+def flask_client(flask_app_: Flask) -> FlaskClient:
+    """flask client 实例
+
+    Args:
+        flask_app_ (Flask): flask 实例
+
+    Returns:
+        FlaskClient: flask 客户端
+    """
+    return flask_app_.test_client()
