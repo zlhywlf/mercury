@@ -2,10 +2,12 @@
 
 from collections.abc import Generator
 from typing import Any
-from pytest import fixture
+
 from flask import Flask
 from flask.testing import FlaskClient
-from mercury.web.flask.create_app import app
+from pytest import fixture
+
+from mercury.app.flask.create_app import app
 
 
 @fixture(name="flask_app_")

@@ -1,5 +1,7 @@
-"""项目入口"""
+from mercury.app.StarletteApp import StarletteApp
+from mercury.settings.StarletteSetting import StarletteSetting
 
-from . import app
+setting = StarletteSetting()
+app = StarletteApp(setting)
 
-app.run()
+app.launch()

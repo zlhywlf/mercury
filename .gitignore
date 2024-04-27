@@ -6,3 +6,5 @@ __pycache__
 *.iml
 *.egg-info
 .pytest_cache
+.env
+.mypy_cache

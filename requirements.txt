@@ -1,0 +1,4 @@
+gunicorn~=22.0.0;sys_platform!='win32'
+orjson~=3.10.1
+starlette~=0.37.2
+uvicorn~=0.29.0
