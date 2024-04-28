@@ -7,21 +7,17 @@ from types import ModuleType
 import mercury.engines
 from mercury.core.Application import Application
 from mercury.core.Engine import Engine
-from mercury.core.Setting import Setting
 from mercury.engines.BaseEngine import BaseEngine
 
 
 class EngineFactory:
-    __MAP = {
-        "default": mercury.engines,
-    }
 
-    @classmethod
-    def create_engine(cls, application: Application, setting: Setting, engine_pkg="default") -> Engine | None:
-        pkg = cls.__MAP[engine_pkg].__name__
+    @staticmethod
+    def create_engine(application: Application) -> Engine | None:
+        pkg = mercury.engines.__name__
         platform_type = platform.system()
         app = application.app
-        is_debug = setting.is_debug
+        is_debug = application.setting.is_debug
 
         for engine in files(pkg).iterdir():
             if not (m := EngineFactory.__get_engine_module(engine, pkg)):

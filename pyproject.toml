@@ -1,0 +1,16 @@
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src/mercury"]
+strict = true
+# mypy 1.9.0 不支持 py312 泛型
+disable_error_code = ["valid-type", "name-defined", "type-arg"]
+
+[[tool.mypy.overrides]]
+module = []
+ignore_missing_imports = true

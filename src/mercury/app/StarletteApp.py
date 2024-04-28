@@ -8,6 +8,7 @@ from starlette.routing import Route
 from mercury.core.Application import Application
 from mercury.core.Setting import Setting
 from mercury.engines.EngineFactory import EngineFactory
+from mercury.settings.StarletteSetting import StarletteSetting
 
 
 async def homepage(request: Request) -> Response:
@@ -16,15 +17,14 @@ async def homepage(request: Request) -> Response:
 
 class StarletteApp(Application):
 
-    def __init__(self, setting: Setting):
-        self._setting = setting
-        if not (engine := EngineFactory.create_engine(self, setting)):
-            raise RuntimeError('Starlette engine is not initialized')
-        self._engine = engine
+    def __init__(self):
+        self._setting = StarletteSetting()
 
     @override
     def launch(self) -> None:
-        self._engine.launch()
+        if not (engine := EngineFactory.create_engine(self)):
+            raise RuntimeError('Starlette engine is not initialized')
+        engine.launch()
 
     @property
     @override
@@ -33,3 +33,8 @@ class StarletteApp(Application):
             debug=self._setting.is_debug,
             routes=[Route('/', homepage, methods=['GET'])],
         )
+
+    @property
+    @override
+    def setting(self) -> Setting:
+        return self._setting
