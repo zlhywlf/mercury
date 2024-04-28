@@ -16,3 +16,7 @@ class Application(Engine, ABC):
     @abstractmethod
     def setting(self) -> Setting:
         """"""
+
+    @abstractmethod
+    def add_route(self, path: str, endpoint: Callable, **kwargs) -> None:
+        """"""
