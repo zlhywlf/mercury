@@ -1,7 +1,14 @@
 from abc import ABC, abstractmethod
+from mercury.core.Launch import Launch
 
 
-class Engine(ABC):
+class Engine(Launch, ABC):
+    @classmethod
     @abstractmethod
-    def launch(self) -> None:
+    def platforms(cls) -> list[str]:
+        """"""
+
+    @classmethod
+    @abstractmethod
+    def debug(cls) -> bool:
         """"""

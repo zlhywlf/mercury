@@ -7,7 +7,7 @@ from starlette.routing import Route
 
 from mercury.core.Application import Application
 from mercury.core.Setting import Setting
-from mercury.engines.EngineFactory import EngineFactory
+from mercury.factories.EngineFactory import EngineFactory
 from mercury.settings.StarletteSetting import StarletteSetting
 from starlette.endpoints import HTTPEndpoint
 from mercury.utils.DecoratorUtil import authentication

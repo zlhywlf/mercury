@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Callable
 
-from mercury.core.Engine import Engine
+from mercury.core.Launch import Launch
 from mercury.core.Setting import Setting
 
 
-class Application(Engine, ABC):
+class Application(Launch, ABC):
 
     @property
     @abstractmethod

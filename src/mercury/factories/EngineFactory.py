@@ -7,7 +7,6 @@ from types import ModuleType
 import mercury.engines
 from mercury.core.Application import Application
 from mercury.core.Engine import Engine
-from mercury.engines.BaseEngine import BaseEngine
 
 
 class EngineFactory:
@@ -29,11 +28,11 @@ class EngineFactory:
     @staticmethod
     def __get_engine(module: ModuleType, platform_type: str, is_debug: bool) -> type | None:
         for clazz in module.__dict__.values():
-            if not isinstance(clazz, type) or clazz is BaseEngine or not issubclass(clazz, BaseEngine):
+            if not isinstance(clazz, type) or clazz is Engine or not issubclass(clazz, Engine):
                 continue
             if is_debug:
-                return clazz if clazz.use_for_debug else None
-            return clazz if platform_type in clazz.platform_type else None
+                return clazz if clazz.debug() else None
+            return clazz if platform_type in clazz.platforms() else None
 
     @staticmethod
     def __get_engine_module(engine: Traversable, pkg: str) -> ModuleType | None:

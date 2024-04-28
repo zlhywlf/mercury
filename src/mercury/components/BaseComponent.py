@@ -1,22 +1,27 @@
 from mercury.core.Application import Application
 from mercury.core.Component import Component
-from mercury.core.Setting import Setting
 from typing import override
 from starlette.endpoints import HTTPEndpoint
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse
 from starlette.requests import Request
-import functools
 
 
-class BaseComponent(Component):
+class BaseComponent(Component, HTTPEndpoint):
     """"""
-    path = "/component/data/{id}"
 
+    path = "/syx/data"
+    path_param = "{app_id}"
+
+    @classmethod
     @override
-    def setup(self, app: Application, setting: Setting) -> None:
-        app.add_route(self.path, BaseComponent.Data)
+    def setup(cls, app: Application) -> None:
+        app.add_route(f"{cls.path}/{cls.path_param}", cls)
 
-    class Data(HTTPEndpoint):
+    async def get(self, request: Request):
+        return JSONResponse({'hello': self.path})
 
-        async def get(self, request: Request):
-            return JSONResponse({'hello': 'world'})
+    async def post(self, request: Request):
+        return self.get(request)
+
+    def authentication(self):
+        """"""

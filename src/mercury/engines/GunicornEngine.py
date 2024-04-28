@@ -3,15 +3,14 @@ from typing import Callable, override
 
 from gunicorn.app.base import BaseApplication
 
-from mercury.engines.BaseEngine import BaseEngine
+from mercury.core.Engine import Engine
 
 
-class GunicornEngine(BaseApplication, BaseEngine):
-    platform_type = ["Linux", "Darwin"]
+class GunicornEngine(BaseApplication, Engine):
 
     def __init__(self, app: Callable, options: dict | None = None) -> None:
         self._options = self.default_options | (options or {})
-        BaseEngine.__init__(self, app)
+        self._app = app
         BaseApplication.__init__(self)
 
     @override
@@ -34,3 +33,13 @@ class GunicornEngine(BaseApplication, BaseEngine):
             "workers": multiprocessing.cpu_count() * 2 + 1,
             "worker_class": "uvicorn.workers.UvicornWorker",
         }
+
+    @classmethod
+    @override
+    def platforms(cls) -> list[str]:
+        return ["Linux", "Darwin"]
+
+    @classmethod
+    @override
+    def debug(cls) -> bool:
+        return False
