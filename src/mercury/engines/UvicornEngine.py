@@ -1,18 +1,15 @@
-from typing import Callable, override
+from typing import override
 
 import uvicorn
 
-from mercury.core.Engine import Engine
+from mercury.core.BaseEngine import BaseEngine
 
 
-class UvicornEngine(Engine):
-
-    def __init__(self, app: Callable) -> None:
-        self._app = app
+class UvicornEngine(BaseEngine):
 
     @override
     def launch(self) -> None:
-        uvicorn.run(self._app)
+        uvicorn.run(self._application.app)
 
     @classmethod
     @override

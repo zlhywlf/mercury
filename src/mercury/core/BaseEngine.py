@@ -1,8 +1,14 @@
 from abc import ABC, abstractmethod
+
+from mercury.core.Application import Application
 from mercury.core.Launch import Launch
 
 
-class Engine(Launch, ABC):
+class BaseEngine(Launch, ABC):
+
+    def __init__(self, application: Application) -> None:
+        self._application = application
+
     @classmethod
     @abstractmethod
     def platforms(cls) -> list[str]:

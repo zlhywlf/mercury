@@ -20,3 +20,8 @@ class Application(Launch, ABC):
     @abstractmethod
     def add_route(self, path: str, endpoint: Callable, **kwargs) -> None:
         """"""
+
+    @property
+    @abstractmethod
+    def platform(self) -> str:
+        """"""

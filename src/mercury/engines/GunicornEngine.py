@@ -1,16 +1,17 @@
 import multiprocessing
-from typing import Callable, override
+from typing import override
 
 from gunicorn.app.base import BaseApplication
 
-from mercury.core.Engine import Engine
+from mercury.core.Application import Application
+from mercury.core.BaseEngine import BaseEngine
 
 
-class GunicornEngine(BaseApplication, Engine):
+class GunicornEngine(BaseApplication, BaseEngine):
 
-    def __init__(self, app: Callable, options: dict | None = None) -> None:
+    def __init__(self, application: Application, options: dict | None = None) -> None:
         self._options = self.default_options | (options or {})
-        self._app = app
+        BaseEngine.__init__(self, application)
         BaseApplication.__init__(self)
 
     @override
@@ -21,7 +22,7 @@ class GunicornEngine(BaseApplication, Engine):
 
     @override
     def load(self):
-        return self._app
+        return self._application.app
 
     @override
     def launch(self) -> None:

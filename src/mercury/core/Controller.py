@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
+
 from mercury.core.Application import Application
 
 
-class Viewer(ABC):
+class Controller(ABC):
     """"""
 
     @classmethod
@@ -12,5 +13,5 @@ class Viewer(ABC):
 
     @classmethod
     @abstractmethod
-    def setup(cls, app: Application) -> None:
+    def setup(cls, application: Application) -> None:
         """"""
