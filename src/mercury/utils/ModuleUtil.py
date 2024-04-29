@@ -8,7 +8,7 @@ from typing import Any, Generator
 def get_modules(pkg: str) -> Generator[ModuleType | None, Any, None]:
     """"""
 
-    def get_module(module_meta: Traversable, pkg: str) -> ModuleType | None:
+    def get_module(module_meta: Traversable) -> ModuleType | None:
         """"""
         name, point, suffix = module_meta.name.rpartition('.')
         if not module_meta.is_file() or suffix != "py":
@@ -19,7 +19,7 @@ def get_modules(pkg: str) -> Generator[ModuleType | None, Any, None]:
             print(f"warning:{pkg}{point}{name}:{e}")
             return None
 
-    return (get_module(module_meta, pkg) for module_meta in files(pkg).iterdir())
+    return (get_module(module_meta) for module_meta in files(pkg).iterdir())
 
 
 def find_class_by_type[T](module: ModuleType | None, super_type: T) -> T | None:

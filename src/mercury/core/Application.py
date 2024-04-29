@@ -25,3 +25,8 @@ class Application(Launch, ABC):
     @abstractmethod
     def platform(self) -> str:
         """"""
+
+    @property
+    @abstractmethod
+    def rds_config(self) -> list:
+        """"""

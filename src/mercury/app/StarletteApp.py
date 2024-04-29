@@ -3,6 +3,7 @@ from typing import Callable, override
 
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
+from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import BaseRoute, Route
@@ -17,14 +18,8 @@ from mercury.utils.DecoratorUtil import authentication
 class Homepage(HTTPEndpoint):
 
     @authentication
-    async def get(self, request):
+    async def get(self, request: Request) -> Response:
         return JSONResponse({'hello': 'world'})
-
-
-async def handle_data(request: Request) -> Response:
-    # data_id = request.path_params['data_id']
-    data_id = await request.json()
-    return JSONResponse({'data_id': data_id})
 
 
 class StarletteApp(Application):
@@ -55,8 +50,16 @@ class StarletteApp(Application):
 
     @override
     def add_route(self, path: str, endpoint: Callable, **kwargs) -> None:
-        self._routes.append(Route(path, endpoint, **kwargs))
+        middleware = kwargs.pop("middleware", [])
+        self._routes.append(
+            Route(path, endpoint, middleware=[Middleware(_, application=self) for _ in middleware], **kwargs))
 
     @property
+    @override
     def platform(self) -> str:
         return self._platform
+
+    @property
+    @override
+    def rds_config(self) -> list:
+        return [1, 2, 3]
