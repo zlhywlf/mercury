@@ -8,8 +8,8 @@ from mercury.core.Controller import Controller
 class TableController(Controller, HTTPEndpoint):
 
     @classmethod
-    def path(cls) -> str:
-        return "/rds/table/{id}"
+    def path(cls) -> list[str]:
+        return ["/rds/table", "/rds/table/{id}"]
 
     async def get(self, request: Request):
         rds_config = request.state.rds_config

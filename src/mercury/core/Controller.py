@@ -6,5 +6,5 @@ class Controller(ABC):
 
     @classmethod
     @abstractmethod
-    def path(cls) -> str:
+    def path(cls) -> list[str]:
         """"""

@@ -11,8 +11,8 @@ class DataController(Controller, HTTPEndpoint):
 
     @classmethod
     @override
-    def path(cls) -> str:
-        return "/rds/data/{id}"
+    def path(cls) -> list[str]:
+        return ["/rds/data", "/rds/data/{id}"]
 
     async def get(self, request: Request):
         rds_config = request.state.rds_config
