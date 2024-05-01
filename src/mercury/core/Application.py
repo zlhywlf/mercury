@@ -28,5 +28,5 @@ class Application(Launch, ABC):
 
     @property
     @abstractmethod
-    def rds_config(self) -> list:
+    def rds_config(self) -> dict[str, dict]:
         """"""

@@ -12,12 +12,12 @@ class DataController(Controller, HTTPEndpoint):
     @classmethod
     @override
     def path(cls) -> list[str]:
-        return ["/rds/data", "/rds/data/{id}"]
+        return ["/rds/data", "/rds/data/{appId}"]
 
     async def get(self, request: Request):
-        rds_config = request.state.rds_config
-        rds_config.append(999)
-        return JSONResponse({'data': rds_config})
+        app_config = request.state.app_config
+        params = request.state.params
+        return JSONResponse({'data': app_config})
 
     async def post(self, request: Request):
-        return self.get(request)
+        return await self.get(request)

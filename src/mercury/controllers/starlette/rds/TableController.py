@@ -17,4 +17,4 @@ class TableController(Controller, HTTPEndpoint):
         return JSONResponse({'table': rds_config})
 
     async def post(self, request: Request):
-        return self.get(request)
+        return await self.get(request)

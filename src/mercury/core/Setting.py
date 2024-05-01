@@ -6,3 +6,8 @@ class Setting(ABC):
     @abstractmethod
     def is_debug(self) -> bool:
         """"""
+
+    @property
+    @abstractmethod
+    def rds_key(self) -> str:
+        """"""

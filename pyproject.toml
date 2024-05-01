@@ -14,3 +14,6 @@ disable_error_code = ["valid-type", "name-defined", "type-arg"]
 [[tool.mypy.overrides]]
 module = []
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
