@@ -29,11 +29,11 @@ class RdsMiddleware(BaseHTTPMiddleware):
         json_params = orjson.loads(body) if body else {}
         params = {**path_params, **query_params, **json_params}
         if encrypt_by_md5(f"{params.get('userId')}+", self._rds_key) != params.get('userKey'):
-            return JSONResponse({"msg": "认证失败"}, status_code=400)
+            return JSONResponse({"msg": "Authentication failed"}, status_code=400)
         app_id = params.get("appId")
         rds_config = await self._mapper.find_rds_config_by_id(app_id)
         if not rds_config:
-            return JSONResponse({"msg": f"appId: {app_id} not exist"}, status_code=400)
+            return JSONResponse({"msg": f"AppId({app_id}) does not exist"}, status_code=400)
         request.state.rds_config = rds_config
         request.state.params = params
         request.state.mapper = self._mapper

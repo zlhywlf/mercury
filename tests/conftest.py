@@ -2,7 +2,7 @@ from models.StarletteContext import StarletteContext
 from pytest import fixture
 from starlette.testclient import TestClient
 
-from mercury.main import create_starlette_app, create_async_db, create_setting
+from mercury.main import create_async_db, create_setting, create_starlette_app
 
 
 @fixture()

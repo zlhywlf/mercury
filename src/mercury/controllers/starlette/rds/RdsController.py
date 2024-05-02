@@ -5,14 +5,20 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from mercury.core.Controller import Controller
+from mercury.middlewares.starlette.RdsMiddleware import RdsMiddleware
 
 
 class RdsController(Controller, HTTPEndpoint):
 
     @classmethod
     @override
-    def path(cls) -> list[str]:
+    def paths(cls) -> list[str]:
         return ["/rds", "/rds/{appId}"]
+
+    @classmethod
+    @override
+    def middlewares(cls) -> list[type[RdsMiddleware]]:
+        return [RdsMiddleware]
 
     async def get(self, request: Request):
         rds_config = request.state.rds_config

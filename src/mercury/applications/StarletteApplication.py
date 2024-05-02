@@ -45,10 +45,10 @@ class StarletteApplication(Application):
     @override
     def add_route(self, path: str, endpoint: Callable, **kwargs) -> None:
         if not self._app:
-            middleware = kwargs.pop("middleware", [])
+            middlewares = kwargs.pop("middlewares", [])
             self._routes.append(
                 Route(path, endpoint,
-                      middleware=[Middleware(_, application=self, async_db=self._async_db) for _ in middleware],
+                      middleware=[Middleware(_, application=self, async_db=self._async_db) for _ in middlewares],
                       **kwargs))
 
     @property

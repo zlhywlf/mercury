@@ -6,5 +6,10 @@ class Controller(ABC):
 
     @classmethod
     @abstractmethod
-    def path(cls) -> list[str]:
+    def paths(cls) -> list[str]:
+        """"""
+
+    @classmethod
+    @abstractmethod
+    def middlewares[T](cls) -> list[T]:
         """"""
