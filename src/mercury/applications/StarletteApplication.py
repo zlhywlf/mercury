@@ -1,6 +1,7 @@
 import platform
 from typing import Callable, override
 
+from motor.motor_asyncio import AsyncIOMotorDatabase
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.responses import JSONResponse
@@ -9,15 +10,16 @@ from starlette.routing import BaseRoute, Route
 from mercury.core.Application import Application
 from mercury.core.Setting import Setting
 from mercury.factories.EngineFactory import EngineFactory
-from mercury.settings.StarletteSetting import StarletteSetting
 
 
 class StarletteApplication(Application):
 
-    def __init__(self):
-        self._setting = StarletteSetting()
+    def __init__(self, *, setting: Setting, async_db: AsyncIOMotorDatabase):
+        self._setting = setting
         self._routes: list[BaseRoute] = []
         self._platform = platform.system()
+        self._app: Starlette | None = None
+        self._async_db = async_db
 
     @override
     def launch(self) -> None:
@@ -27,11 +29,13 @@ class StarletteApplication(Application):
 
     @property
     @override
-    def app(self) -> Callable:
-        return Starlette(
-            debug=self._setting.is_debug,
-            routes=[Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET']), *self._routes],
-        )
+    def instance(self) -> Callable:
+        if not self._app:
+            self._app = Starlette(
+                debug=self._setting.is_debug,
+                routes=[Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET']), *self._routes],
+            )
+        return self._app
 
     @property
     @override
@@ -40,9 +44,12 @@ class StarletteApplication(Application):
 
     @override
     def add_route(self, path: str, endpoint: Callable, **kwargs) -> None:
-        middleware = kwargs.pop("middleware", [])
-        self._routes.append(
-            Route(path, endpoint, middleware=[Middleware(_, application=self) for _ in middleware], **kwargs))
+        if not self._app:
+            middleware = kwargs.pop("middleware", [])
+            self._routes.append(
+                Route(path, endpoint,
+                      middleware=[Middleware(_, application=self, async_db=self._async_db) for _ in middleware],
+                      **kwargs))
 
     @property
     @override

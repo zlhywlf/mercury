@@ -18,4 +18,9 @@ class StarletteSetting(Setting):
     @property
     @override
     def rds_key(self) -> str:
-        return self._config("RDS_KEY", cast=str, default="")
+        return self._config("RDS_KEY", cast=str, default="key")
+
+    @property
+    @override
+    def mongo(self) -> str:
+        return self._config("MONGO", cast=str, default="mongodb://localhost:27017")

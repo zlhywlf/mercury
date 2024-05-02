@@ -7,17 +7,17 @@ from starlette.responses import JSONResponse
 from mercury.core.Controller import Controller
 
 
-class DataController(Controller, HTTPEndpoint):
+class RdsController(Controller, HTTPEndpoint):
 
     @classmethod
     @override
     def path(cls) -> list[str]:
-        return ["/rds/data", "/rds/data/{appId}"]
+        return ["/rds", "/rds/{appId}"]
 
     async def get(self, request: Request):
-        app_config = request.state.app_config
+        rds_config = request.state.rds_config
         params = request.state.params
-        return JSONResponse({'data': app_config})
+        return JSONResponse({'params': params})
 
     async def post(self, request: Request):
         return await self.get(request)

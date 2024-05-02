@@ -11,3 +11,8 @@ class Setting(ABC):
     @abstractmethod
     def rds_key(self) -> str:
         """"""
+
+    @property
+    @abstractmethod
+    def mongo(self) -> str:
+        """"""

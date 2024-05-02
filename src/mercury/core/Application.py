@@ -9,7 +9,7 @@ class Application(Launch, ABC):
 
     @property
     @abstractmethod
-    def app(self) -> Callable:
+    def instance(self) -> Callable:
         """"""
 
     @property

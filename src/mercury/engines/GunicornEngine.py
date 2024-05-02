@@ -22,7 +22,7 @@ class GunicornEngine(BaseApplication, BaseEngine):
 
     @override
     def load(self):
-        return self._application.app
+        return self._application.instance
 
     @override
     def launch(self) -> None:

@@ -1,20 +1,21 @@
-from collections.abc import Generator
-from typing import Any
-
+from models.StarletteContext import StarletteContext
 from pytest import fixture
-from starlette.applications import Starlette
 from starlette.testclient import TestClient
 
-from mercury.main import starlette_app
+from mercury.main import create_starlette_app, create_async_db, create_setting
 
 
 @fixture()
-def starlette_app_() -> Generator[Starlette, Any, None]:
-    """"""
-    yield starlette_app.app
+def ctx() -> StarletteContext:
+    setting = create_setting()
+    async_db = create_async_db(setting.mongo)
+    app = create_starlette_app(setting, async_db)
+    return StarletteContext(client=TestClient(app.instance),
+                            rds_auth={"userId": "test-user",
+                                      "userKey": "2b9119ecd2676e197d714d8510b02e7d"},
+                            db=async_db)
 
 
-@fixture()
-def starlette_client(starlette_app_: Starlette) -> TestClient:
-    """"""
-    return TestClient(starlette_app_)
+@fixture(autouse=True)
+def anyio_backend() -> str:
+    return 'asyncio'

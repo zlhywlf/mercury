@@ -9,7 +9,7 @@ class UvicornEngine(BaseEngine):
 
     @override
     def launch(self) -> None:
-        uvicorn.run(self._application.app)
+        uvicorn.run(self._application.instance)
 
     @classmethod
     @override
