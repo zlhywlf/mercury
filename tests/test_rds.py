@@ -21,19 +21,22 @@ async def test_add_rds_config(ctx: StarletteContext):
 
 def test_rds_by_get(ctx: StarletteContext):
     """"""
-    response = ctx.client.get("/rds", params={"appId": "table01", **ctx.rds_auth})
+    response = ctx.client.get("/rds", params={"appId": "table01", "a": "a_str", "b": "b_str", **ctx.rds_auth})
     assert response.status_code == 200
 
 
 def test_rds_by_post(ctx: StarletteContext):
     """"""
-    response = ctx.client.post("/rds", params=ctx.rds_auth, json={"appId": "table01"})
+    response = ctx.client.post("/rds", params=ctx.rds_auth, json={"appId": "table01", "a": "a_str", "b": "b_str", })
     assert response.status_code == 200
 
 
 def test_rds_new_task(ctx: StarletteContext):
     """"""
-    ctx.client.post("/rds", json={
-        "appId": "table01",
+    response = ctx.client.post("/rds", json={
+        "appId": "userInfo",
+        "a": "a_str",
+        "b": "b_str",
         **ctx.rds_auth
     })
+    assert response.status_code == 200

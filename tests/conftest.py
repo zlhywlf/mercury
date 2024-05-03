@@ -1,3 +1,5 @@
+from typing import Generator, Any
+
 from models.StarletteContext import StarletteContext
 from pytest import fixture
 from starlette.testclient import TestClient
@@ -6,15 +8,16 @@ from mercury.main import create_async_db, create_setting, create_starlette_app
 
 
 @fixture()
-def ctx() -> StarletteContext:
+def ctx() -> Generator[StarletteContext, Any, None]:
     setting = create_setting()
     async_db = create_async_db(setting.mongo)
     app = create_starlette_app(setting, async_db)
-    return StarletteContext(client=TestClient(app.instance),
-                            rds_auth={"userId": "test-user",
-                                      "userKey": "2b9119ecd2676e197d714d8510b02e7d"},
-                            db=async_db,
-                            setting=setting)
+    with TestClient(app.instance) as client:
+        yield StarletteContext(client=client,
+                               rds_auth={"userId": "test-user",
+                                         "userKey": "2b9119ecd2676e197d714d8510b02e7d"},
+                               db=async_db,
+                               setting=setting)
 
 
 @fixture(autouse=True)

@@ -23,14 +23,12 @@ class RdsController(Controller, HTTPEndpoint):
 
     async def get(self, request: Request):
         service = request.state.service
-        params = request.state.params
         assert isinstance(service, AsyncRdsService)
-        app_id = params.get("appId")
-        rds_task = await service.get_rds_task(app_id)
-        if not rds_task:
-            return JSONResponse({"msg": f"AppId({app_id}) does not exist"}, status_code=400)
-        service.get_data()
-        return JSONResponse({'params': 'params'})
+        ok = await service.get_rds_task()
+        if not ok:
+            return JSONResponse({"msg": f"AppId({service.app_id}) does not exist"}, status_code=400)
+        ret = await service.get_data()
+        return JSONResponse({'data': ret})
 
     async def post(self, request: Request):
         return await self.get(request)
