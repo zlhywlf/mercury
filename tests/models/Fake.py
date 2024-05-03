@@ -1,5 +1,5 @@
-from mercury.models.rds.Task import Task
 from mercury.models.rds.Arg import Arg
+from mercury.models.rds.Task import Task
 from mercury.models.rds.TaskConfig import TaskConfig
 
 __user_info = Task(_id="userInfo", type="api", pre=None, post=None, args=[Arg(name="a"), Arg(name="b")],

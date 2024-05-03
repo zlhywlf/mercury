@@ -10,13 +10,13 @@ from mercury.core.BaseEngine import BaseEngine
 class GunicornEngine(BaseApplication, BaseEngine):
 
     def __init__(self, application: Application, options: dict | None = None) -> None:
-        self._options = self.default_options | (options or {})
+        self.__options = self.default_options | (options or {})
         BaseEngine.__init__(self, application)
         BaseApplication.__init__(self)
 
     @override
     def load_config(self):
-        config = {key: value for key, value in self._options.items() if key in self.cfg.settings and value is not None}
+        config = {key: value for key, value in self.__options.items() if key in self.cfg.settings and value is not None}
         for key, value in config.items():
             self.cfg.set(key.lower(), value)
 

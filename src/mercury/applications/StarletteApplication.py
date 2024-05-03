@@ -15,11 +15,11 @@ from mercury.factories.EngineFactory import EngineFactory
 class StarletteApplication(Application):
 
     def __init__(self, *, setting: Setting, async_db: AsyncIOMotorDatabase):
-        self._setting = setting
-        self._routes: list[BaseRoute] = []
-        self._platform = platform.system()
-        self._app: Starlette | None = None
-        self._async_db = async_db
+        self.__setting = setting
+        self.__routes: list[BaseRoute] = []
+        self.__platform = platform.system()
+        self.__app: Starlette | None = None
+        self.__async_db = async_db
 
     @override
     def launch(self) -> None:
@@ -30,31 +30,31 @@ class StarletteApplication(Application):
     @property
     @override
     def instance(self) -> Callable:
-        if not self._app:
-            self._app = Starlette(
-                debug=self._setting.is_debug,
-                routes=[Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET']), *self._routes],
+        if not self.__app:
+            self.__app = Starlette(
+                debug=self.__setting.is_debug,
+                routes=[Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET']), *self.__routes],
             )
-        return self._app
+        return self.__app
 
     @property
     @override
     def setting(self) -> Setting:
-        return self._setting
+        return self.__setting
 
     @override
     def add_route(self, path: str, endpoint: Callable, **kwargs) -> None:
-        if not self._app:
+        if not self.__app:
             middlewares = kwargs.pop("middlewares", [])
-            self._routes.append(
+            self.__routes.append(
                 Route(path, endpoint,
-                      middleware=[Middleware(_, application=self, async_db=self._async_db) for _ in middlewares],
+                      middleware=[Middleware(_, application=self, async_db=self.__async_db) for _ in middlewares],
                       **kwargs))
 
     @property
     @override
     def platform(self) -> str:
-        return self._platform
+        return self.__platform
 
     @property
     @override
