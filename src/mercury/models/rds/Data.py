@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class RdsData:
+class Data:
     _id: str
     actual_id: str | None
     parent_id: str | None

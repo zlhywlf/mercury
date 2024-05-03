@@ -16,3 +16,13 @@ class Setting(ABC):
     @abstractmethod
     def mongo(self) -> str:
         """"""
+
+    @property
+    @abstractmethod
+    def rds_task_table_name(self) -> str:
+        """"""
+
+    @property
+    @abstractmethod
+    def rds_data_table_name(self) -> str:
+        """"""

@@ -19,7 +19,7 @@ class RdsMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self._rds_config = application.rds_config
         self._rds_key = application.setting.rds_key
-        self._mapper = AsyncRdsMapperSimple(async_db)
+        self._mapper = AsyncRdsMapperSimple(async_db, application.setting)
 
     @override
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:

@@ -13,7 +13,8 @@ def ctx() -> StarletteContext:
     return StarletteContext(client=TestClient(app.instance),
                             rds_auth={"userId": "test-user",
                                       "userKey": "2b9119ecd2676e197d714d8510b02e7d"},
-                            db=async_db)
+                            db=async_db,
+                            setting=setting)
 
 
 @fixture(autouse=True)
