@@ -1,4 +1,4 @@
-from typing import Generator, Any
+from typing import Any, Generator
 
 from models.StarletteContext import StarletteContext
 from pytest import fixture

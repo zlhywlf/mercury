@@ -1,5 +1,6 @@
+import contextlib
 import platform
-from typing import Callable, override, AsyncIterator, TypedDict
+from typing import AsyncIterator, Callable, TypedDict, override
 
 from httpx import AsyncClient
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -11,7 +12,6 @@ from starlette.routing import BaseRoute, Route
 from mercury.core.Application import Application
 from mercury.core.Setting import Setting
 from mercury.factories.EngineFactory import EngineFactory
-import contextlib
 
 
 class StarletteApplication(Application):

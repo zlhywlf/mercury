@@ -1,6 +1,7 @@
+from pydantic import BaseModel
+
 from mercury.models.rds.Task import Task
 from mercury.models.rds.TaskConfig import TaskConfig
-from pydantic import BaseModel
 
 
 class UserInfo(BaseModel):
