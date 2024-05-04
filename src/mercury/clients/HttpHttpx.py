@@ -3,6 +3,7 @@ from typing import Any, override
 from httpx import AsyncClient
 
 from mercury.core.clients.Http import Http
+from mercury.utils.ModuleUtil import run_dynamic_method
 
 
 class HttpHttpx(Http):
@@ -12,13 +13,10 @@ class HttpHttpx(Http):
         self.__client = client
 
     @override
-    async def request(self, url: str, method: str, params: dict)-> Any:
-        handler = getattr(self, method.lower())
-        if not handler:
-            raise RuntimeError(f'Method {method} not supported')
-        return await handler(url, params)
+    async def request(self, url: str, method: str, params: dict) -> Any:
+        return await run_dynamic_method(self, method.lower(), url, params)
 
     @override
-    async def get(self, url: str, params: dict)-> Any:
+    async def get(self, url: str, params: dict) -> Any:
         rp = await self.__client.get(url, params=params)
         return rp.json()

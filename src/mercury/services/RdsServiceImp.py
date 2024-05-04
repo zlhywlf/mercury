@@ -6,6 +6,7 @@ from mercury.core.clients.Http import Http
 from mercury.core.mappers.RdsMapper import RdsMapper
 from mercury.core.services.RdsService import RdsService
 from mercury.models.rds.Task import Task
+from mercury.utils.ModuleUtil import run_dynamic_method
 
 
 class RdsServiceImp(RdsService):
@@ -21,7 +22,7 @@ class RdsServiceImp(RdsService):
     @override
     async def get_data(self) -> Any:
         t = self.__rds_task.type
-        return await self.handle_data(t, self.__params, self.__rds_task)
+        return await run_dynamic_method(self, f"handle_{t}", self.__params, self.__rds_task)
 
     @override
     async def get_rds_task(self) -> bool:
@@ -53,7 +54,7 @@ class RdsServiceImp(RdsService):
         data = []
         if rds_task.sub_tasks:
             for sub_task in rds_task.sub_tasks:
-                d = await self.handle_data(sub_task.type, params, sub_task)  # async task
+                d = await run_dynamic_method(self, f"handle_{sub_task.type}", params, sub_task)  # async task
                 data.append(d)
         return data
 
@@ -61,9 +62,3 @@ class RdsServiceImp(RdsService):
     async def handle_db(self, params: dict, rds_task: Task) -> Any:
         """"""
         validate(instance=params, schema=rds_task.args_schema)
-
-    async def handle_data(self, t: str, params: dict, rds_task: Task) -> Any:
-        handler = getattr(self, f"handle_{t}")
-        if not handler:
-            raise RuntimeError(f'Task {t} not supported')
-        return await handler(params, rds_task)

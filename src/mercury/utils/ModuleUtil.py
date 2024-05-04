@@ -30,3 +30,11 @@ def find_class_by_type[T](module: ModuleType | None, super_type: T) -> T | None:
         if not isinstance(clazz, type) or clazz is super_type or not issubclass(clazz, super_type):
             continue
         return clazz
+
+
+async def run_dynamic_method(obj: object, name: str, *args: Any, **kwargs: Any) -> Any:
+    """"""
+    handler = getattr(obj, name)
+    if not handler:
+        raise RuntimeError(f'{name} not supported')
+    return await handler(*args, **kwargs)
