@@ -1,5 +1,6 @@
 from typing import Any, override
 
+from anyio import create_task_group
 from jsonschema import validate
 
 from mercury.core.clients.Http import Http
@@ -51,11 +52,17 @@ class RdsServiceImp(RdsService):
     async def handle_app(self, params: dict, rds_task: Task) -> Any:
         """"""
         validate(instance=params, schema=rds_task.args_schema)
+
         data = []
+
+        async def wrapper(*args) -> None:
+            d = await run_dynamic_method(self, args[0], args[1], args[2])
+            data.append(d)
+
         if rds_task.sub_tasks:
-            for sub_task in rds_task.sub_tasks:
-                d = await run_dynamic_method(self, f"handle_{sub_task.type}", params, sub_task)  # async task
-                data.append(d)
+            async with create_task_group() as tg:
+                for sub_task in rds_task.sub_tasks:
+                    tg.start_soon(wrapper, f"handle_{sub_task.type}", params, sub_task)
         return data
 
     @override
