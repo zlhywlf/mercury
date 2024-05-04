@@ -1,8 +1,8 @@
 from typing import Any, override
 
-from httpx import AsyncClient
 from jsonschema import validate
 
+from mercury.core.clients.Http import Http
 from mercury.core.mappers.AsyncRdsMapper import AsyncRdsMapper
 from mercury.core.services.AsyncRdsService import AsyncRdsService
 from mercury.models.rds.Task import Task
@@ -10,7 +10,7 @@ from mercury.models.rds.Task import Task
 
 class AsyncRdsServiceImp(AsyncRdsService):
 
-    def __init__(self, mapper: AsyncRdsMapper, params: dict, http_client: AsyncClient):
+    def __init__(self, mapper: AsyncRdsMapper, params: dict, http_client: Http):
         """"""
         self.__mapper = mapper
         self.__app_id = params.pop('appId', None)
@@ -44,9 +44,9 @@ class AsyncRdsServiceImp(AsyncRdsService):
         """"""
         args = {_: self.__params[_] for _ in self.__rds_task.args}
         configs = {_["name"]: _["value"] for _ in self.__rds_task.configs}
-        rp = await self.__http_client.request(configs.get("method"), configs.get("url"), json=args, params=args,
-                                              data=args)
-        return rp.json()
+        # rp = await self.__http_client.request(configs.get("method"), configs.get("url"), json=args, params=args,
+        #                                       data=args)
+        return "rp.json()"
 
     @override
     async def handle_app(self) -> Any:

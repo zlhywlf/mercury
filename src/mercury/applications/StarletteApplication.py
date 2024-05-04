@@ -1,27 +1,33 @@
 import contextlib
 import platform
-from typing import AsyncIterator, Callable, TypedDict, override
+from typing import Any, AsyncGenerator, Self, override
 
 from httpx import AsyncClient
-from motor.motor_asyncio import AsyncIOMotorDatabase
+from motor.motor_asyncio import AsyncIOMotorClient
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.responses import JSONResponse
-from starlette.routing import BaseRoute, Route
+from starlette.routing import Route
 
+from mercury.clients.HttpHttpx import HttpHttpx
+from mercury.clients.MongoMotor import MongoMotor
 from mercury.core.Application import Application
+from mercury.core.Controller import Controller
 from mercury.core.Setting import Setting
 from mercury.factories.EngineFactory import EngineFactory
+from mercury.models.AppContext import AppContext
+from mercury.utils.ControllerUtil import yield_controllers
 
 
-class StarletteApplication(Application):
+class StarletteApplication(Starlette, Application):
 
-    def __init__(self, *, setting: Setting, async_db: AsyncIOMotorDatabase):
+    def __init__(self, *, setting: Setting, controllers: list[type[Controller]]):
         self.__setting = setting
-        self.__routes: list[BaseRoute] = []
         self.__platform = platform.system()
-        self.__app: Starlette | None = None
-        self.__async_db = async_db
+        routes: list[Route] = [Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET'])]
+        for meta in yield_controllers(controllers):
+            routes.append(Route(meta.path, meta.controller, middleware=[Middleware(_) for _ in meta.middlewares]))
+        Starlette.__init__(self, debug=setting.is_debug, lifespan=self.lifespan, routes=routes)
 
     @override
     def launch(self) -> None:
@@ -31,36 +37,18 @@ class StarletteApplication(Application):
 
     @property
     @override
-    def instance(self) -> Callable:
-        if not self.__app:
-            self.__app = Starlette(
-                debug=self.__setting.is_debug,
-                lifespan=StarletteApplication.lifespan,
-                routes=[Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET']), *self.__routes],
-            )
-        return self.__app
-
-    @property
-    @override
     def setting(self) -> Setting:
         return self.__setting
-
-    @override
-    def add_route(self, path: str, endpoint: Callable, **kwargs) -> None:
-        if not self.__app:
-            middlewares = kwargs.pop("middlewares", [])
-            self.__routes.append(
-                Route(path, endpoint,
-                      middleware=[Middleware(_, application=self, async_db=self.__async_db) for _ in middlewares],
-                      **kwargs))
 
     @property
     @override
     def platform(self) -> str:
         return self.__platform
 
-    @staticmethod
     @contextlib.asynccontextmanager
-    async def lifespan(app: Starlette) -> AsyncIterator[dict[str, AsyncClient]]:
-        async with AsyncClient() as client:
-            yield {"http_client": client}
+    async def lifespan(self, app: Self) -> AsyncGenerator[dict[str, AppContext], Any]:
+        async with AsyncClient() as http_client:
+            yield {"ctx": AppContext(HttpHttpx(client=http_client),
+                                     app,
+                                     MongoMotor(AsyncIOMotorClient(self.setting.mongo)))
+                   }
