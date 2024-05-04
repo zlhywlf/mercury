@@ -22,6 +22,8 @@ class AsyncRdsServiceImp(AsyncRdsService):
     async def get_data(self) -> Any:
         t = self.__rds_task.type
         handler = getattr(self, f"handle_{t}")
+        if not handler:
+            raise RuntimeError(f'Task {t} not supported')
         return await handler()
 
     @override
@@ -44,9 +46,8 @@ class AsyncRdsServiceImp(AsyncRdsService):
         """"""
         args = {_: self.__params[_] for _ in self.__rds_task.args}
         configs = {_["name"]: _["value"] for _ in self.__rds_task.configs}
-        # rp = await self.__http_client.request(configs.get("method"), configs.get("url"), json=args, params=args,
-        #                                       data=args)
-        return "rp.json()"
+        rp = await self.__http_client.request(configs.get("url"), configs.get("method"), args)
+        return rp
 
     @override
     async def handle_app(self) -> Any:
