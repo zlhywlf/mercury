@@ -9,7 +9,7 @@ from mercury.app import app
 from mercury.settings.StarletteSetting import StarletteSetting
 
 
-@fixture()
+@fixture(scope="session")
 def ctx() -> Generator[StarletteContext, Any, None]:
     setting = StarletteSetting()
     async_db = AsyncIOMotorClient(setting.mongo)["mercury"]

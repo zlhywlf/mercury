@@ -2,13 +2,13 @@ from typing import override
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from mercury.core.mappers.AsyncRdsMapper import AsyncRdsMapper
+from mercury.core.mappers.RdsMapper import RdsMapper
 from mercury.core.Setting import Setting
 from mercury.models.rds.Data import Data
 from mercury.models.rds.Task import Task
 
 
-class AsyncRdsMapperImp(AsyncRdsMapper):
+class AsyncRdsMapperImp(RdsMapper):
     """"""
 
     def __init__(self, db: AsyncIOMotorDatabase, setting: Setting):

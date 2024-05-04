@@ -1,0 +1,69 @@
+from typing import Any, override
+
+from jsonschema import validate
+
+from mercury.core.clients.Http import Http
+from mercury.core.mappers.RdsMapper import RdsMapper
+from mercury.core.services.RdsService import RdsService
+from mercury.models.rds.Task import Task
+
+
+class RdsServiceImp(RdsService):
+
+    def __init__(self, mapper: RdsMapper, params: dict, http_client: Http):
+        """"""
+        self.__mapper = mapper
+        self.__app_id = params.pop('appId', None)
+        self.__params = params
+        self.__rds_task: Task | None = None
+        self.__http_client = http_client
+
+    @override
+    async def get_data(self) -> Any:
+        t = self.__rds_task.type
+        return await self.handle_data(t, self.__params, self.__rds_task)
+
+    @override
+    async def get_rds_task(self) -> bool:
+        """"""
+        if not self.__app_id:
+            return False
+        self.__rds_task = await self.__mapper.find_rds_task_by_id(self.__app_id)
+        return self.__rds_task is not None
+
+    @property
+    @override
+    def app_id(self) -> str | None:
+        """"""
+        return self.__app_id
+
+    @override
+    async def handle_api(self, params: dict, rds_task: Task) -> Any:
+        """"""
+        validate(instance=params, schema=rds_task.args_schema)
+        args = {_: params[_] for _ in rds_task.args}
+        configs = {_.name: _.value for _ in rds_task.configs}
+        rp = await self.__http_client.request(configs.get("url"), configs.get("method"), args)
+        return rp
+
+    @override
+    async def handle_app(self, params: dict, rds_task: Task) -> Any:
+        """"""
+        validate(instance=params, schema=rds_task.args_schema)
+        data = []
+        if rds_task.sub_tasks:
+            for sub_task in rds_task.sub_tasks:
+                d = await self.handle_data(sub_task.type, params, sub_task)  # async task
+                data.append(d)
+        return data
+
+    @override
+    async def handle_db(self, params: dict, rds_task: Task) -> Any:
+        """"""
+        validate(instance=params, schema=rds_task.args_schema)
+
+    async def handle_data(self, t: str, params: dict, rds_task: Task) -> Any:
+        handler = getattr(self, f"handle_{t}")
+        if not handler:
+            raise RuntimeError(f'Task {t} not supported')
+        return await handler(params, rds_task)

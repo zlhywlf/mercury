@@ -4,7 +4,7 @@ from mercury.models.rds.Data import Data
 from mercury.models.rds.Task import Task
 
 
-class AsyncRdsMapper(ABC):
+class RdsMapper(ABC):
     @abstractmethod
     async def insert_rds_data(self, rds_data: Data) -> None:
         """"""

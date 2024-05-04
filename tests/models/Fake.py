@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
+from mercury.models.rds.Config import Config
 from mercury.models.rds.Task import Task
-from mercury.models.rds.TaskConfig import TaskConfig
 
 
 class UserInfo(BaseModel):
@@ -9,24 +9,26 @@ class UserInfo(BaseModel):
     b: str
 
 
-__user_info = Task(_id="userInfo",
-                   type="api",
-                   pre=None,
-                   post=None,
-                   args=["a", "b"],
-                   args_schema=UserInfo.model_json_schema(),
-                   configs=[TaskConfig(name="url", value="https://www.httpbin.org/get"),
-                            TaskConfig(name="method", value="GET")],
-                   sub_tasks=None)
+api_user_info = Task(_id="userInfo",
+                     type="api",
+                     pre=None,
+                     post=None,
+                     args=["a", "b"],
+                     args_schema=UserInfo.model_json_schema(),
+                     configs=[Config(name="url", value="https://www.httpbin.org/get"),
+                              Config(name="method", value="GET")],
+                     sub_tasks=None)
+
+app_user_info = Task(_id="table01",
+                     type="app",
+                     pre=None,
+                     post=None,
+                     args=["a", "b"],
+                     args_schema=UserInfo.model_json_schema(),
+                     configs=None,
+                     sub_tasks=[api_user_info])
 
 fake_config = [
-    __user_info,
-    Task(_id="table01",
-         type="app",
-         pre=None,
-         post=None,
-         args=["a", "b"],
-         args_schema=UserInfo.model_json_schema(),
-         configs=None,
-         sub_tasks=[__user_info])
+    api_user_info,
+    app_user_info
 ]
