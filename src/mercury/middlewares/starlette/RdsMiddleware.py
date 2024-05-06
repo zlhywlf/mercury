@@ -18,7 +18,8 @@ class RdsMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         ctx = request.state.ctx
         assert isinstance(ctx, AppContext)
-        mapper = AsyncRdsMapperImp(ctx.mongo_client.get_db_by_name("mercury"), ctx.application.setting)
+        mapper = AsyncRdsMapperImp(ctx.mongo_client.get_db_by_name(ctx.application.setting.project_name),
+                                   ctx.application.setting)
         rds_key = ctx.application.setting.rds_key
         body = await request.body()
         json_params = orjson.loads(body) if body else {}

@@ -26,3 +26,8 @@ class Setting(ABC):
     @abstractmethod
     def rds_data_table_name(self) -> str:
         """"""
+
+    @property
+    @abstractmethod
+    def project_name(self) -> str:
+        """"""

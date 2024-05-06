@@ -36,3 +36,9 @@ class StarletteSetting(Setting):
     def rds_data_table_name(self) -> str:
         """"""
         return self._config("RDS_DATA_TABLE_NAME", cast=str, default="rds_data")
+
+    @property
+    @override
+    def project_name(self) -> str:
+        """"""
+        return self._config("PROJECT_NAME", cast=str, default="mercury")

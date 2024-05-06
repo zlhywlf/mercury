@@ -11,8 +11,8 @@ from mercury.settings.StarletteSetting import StarletteSetting
 
 @fixture(scope="session")
 def ctx() -> Generator[StarletteContext, Any, None]:
-    setting = StarletteSetting()
-    async_db = AsyncIOMotorClient(setting.mongo)["mercury"]
+    setting = StarletteSetting(env_name="../.env")
+    async_db = AsyncIOMotorClient(setting.mongo)[setting.project_name]
     with TestClient(app) as client:
         yield StarletteContext(client=client,
                                rds_auth={"userId": "test-user",
