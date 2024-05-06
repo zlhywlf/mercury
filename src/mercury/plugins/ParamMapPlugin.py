@@ -5,6 +5,7 @@ from mercury.core.clients.Mongo import Mongo
 from mercury.core.Plugin import Plugin
 from mercury.models.rds.Content import Content
 from mercury.models.rds.PluginMeta import PluginMeta
+from mercury.models.rds.Task import Task
 
 
 class ParamMapPlugin(Plugin):
@@ -13,7 +14,7 @@ class ParamMapPlugin(Plugin):
         self.__map = {_.name: _.value for _ in meta.configs}
 
     @override
-    def pre(self, current: Content, parent: Content) -> None:
+    def pre(self, current: Content, parent: Content, rds_task: Task) -> None:
         """"""
         params = []
         for _ in parent.sub_params:

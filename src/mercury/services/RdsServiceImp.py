@@ -117,13 +117,13 @@ class RdsServiceImp(RdsService):
                 else:
                     raise RuntimeError(f"plugin {meta.id} not found")
         for plugin in plugins:
-            plugin.pre(content, parent)
+            plugin.pre(content, parent, rds_task)
 
         data = await func(content)
 
         content.data.extend(data)
         for plugin in plugins:
-            plugin.post(content, parent)
+            plugin.post(content, parent, rds_task)
 
         if rds_task.type == "subject" and self.__content:
             assert isinstance(self.__content.data, dict)
