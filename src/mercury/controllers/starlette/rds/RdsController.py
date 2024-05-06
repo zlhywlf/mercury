@@ -27,8 +27,8 @@ class RdsController(Controller, HTTPEndpoint):
         ok = await service.get_rds_task()
         if not ok:
             return JSONResponse({"msg": f"AppId({service.app_id}) does not exist"}, status_code=400)
-        ret = await service.get_data()
-        return JSONResponse({'data': ret})
+        await service.get_data()
+        return JSONResponse({'data': service.content.model_dump()})
 
     async def post(self, request: Request):
         return await self.get(request)

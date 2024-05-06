@@ -13,6 +13,7 @@ from mercury.clients.HttpHttpx import HttpHttpx
 from mercury.clients.MongoMotor import MongoMotor
 from mercury.core.Application import Application
 from mercury.core.Controller import Controller
+from mercury.core.Plugin import Plugin
 from mercury.core.Setting import Setting
 from mercury.factories.EngineFactory import EngineFactory
 from mercury.models.AppContext import AppContext
@@ -21,9 +22,10 @@ from mercury.utils.ControllerUtil import yield_controllers
 
 class StarletteApplication(Starlette, Application):
 
-    def __init__(self, *, setting: Setting, controllers: list[type[Controller]]):
+    def __init__(self, *, setting: Setting, controllers: list[type[Controller]], rds_plugins: dict[str, type[Plugin]]):
         self.__setting = setting
         self.__platform = platform.system()
+        self.__rds_plugins = rds_plugins
         routes: list[Route] = [Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET'])]
         for meta in yield_controllers(controllers):
             routes.append(Route(meta.path, meta.controller, middleware=[Middleware(_) for _ in meta.middlewares]))
@@ -50,5 +52,6 @@ class StarletteApplication(Starlette, Application):
         async with AsyncClient() as http_client:
             yield {"ctx": AppContext(HttpHttpx(client=http_client),
                                      app,
-                                     MongoMotor(AsyncIOMotorClient(self.setting.mongo)))
+                                     MongoMotor(AsyncIOMotorClient(self.setting.mongo)),
+                                     self.__rds_plugins)
                    }

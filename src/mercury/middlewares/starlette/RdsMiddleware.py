@@ -26,5 +26,5 @@ class RdsMiddleware(BaseHTTPMiddleware):
         params = {**request.path_params, **request.query_params, **json_params}
         if encrypt_by_md5(f"{params.get('userId')}+", rds_key) != params.get('userKey'):
             return JSONResponse({"msg": "Authentication failed"}, status_code=400)
-        request.state.service = RdsServiceImp(mapper, params, ctx.http_client)
+        request.state.service = RdsServiceImp(mapper, params, ctx)
         return await call_next(request)

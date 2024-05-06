@@ -20,7 +20,7 @@ async def test_add_rds_config(ctx: StarletteContext):
 def test_rds_by_get(ctx: StarletteContext):
     """"""
     response = ctx.client.get("/rds",
-                              params={"appId": app_user_info._id, "a": "a_str", "b": "b_str", **ctx.rds_auth})
+                              params={"appId": app_user_info._id, "aa": "a_str", "bb": "b_str", **ctx.rds_auth})
     assert response.status_code == 200
 
 
@@ -28,7 +28,7 @@ def test_rds_by_post(ctx: StarletteContext):
     """"""
     response = ctx.client.post("/rds",
                                params=ctx.rds_auth,
-                               json={"appId": app_user_info._id, "a": "a_str", "b": "b_str", })
+                               json={"appId": app_user_info._id, "aa": "a_str", "bb": "b_str", })
     assert response.status_code == 200
 
 

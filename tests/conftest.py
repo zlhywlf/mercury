@@ -1,3 +1,4 @@
+import os
 from typing import Any, Generator
 
 from models.StarletteContext import StarletteContext
@@ -11,7 +12,8 @@ from mercury.settings.StarletteSetting import StarletteSetting
 
 @fixture(scope="session")
 def ctx() -> Generator[StarletteContext, Any, None]:
-    setting = StarletteSetting(env_name="../.env")
+    os.chdir(os.path.join(os.path.dirname(__file__), ".."))
+    setting = StarletteSetting()
     async_db = AsyncIOMotorClient(setting.mongo)[setting.project_name]
     with TestClient(app) as client:
         yield StarletteContext(client=client,

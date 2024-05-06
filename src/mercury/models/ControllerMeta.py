@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from mercury.core.Controller import Controller
 
 
-@dataclass
+@dataclass(frozen=True)
 class ControllerMeta[T]:
     path: str
     controller: type[Controller]
