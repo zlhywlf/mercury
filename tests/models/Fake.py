@@ -5,9 +5,14 @@ from mercury.models.rds.PluginMeta import PluginMeta
 from mercury.models.rds.Task import Task
 
 
-class UserInfo(BaseModel):
+class UserInfo01(BaseModel):
     a: str
     b: str
+
+
+class UserInfo02(BaseModel):
+    aa: str
+    bb: str
 
 
 api_user_info = Task(_id="userInfo",
@@ -15,7 +20,8 @@ api_user_info = Task(_id="userInfo",
                      type="api",
                      plugins=None,
                      args=["a", "b"],
-                     args_schema=UserInfo.model_json_schema(),
+                     args_schema=UserInfo01.model_json_schema(),
+                     data_schema=None,
                      configs=[Config(name="url", value="https://www.httpbin.org/get"),
                               Config(name="method", value="GET")],
                      sub_tasks=None)
@@ -26,7 +32,8 @@ app_user_info = Task(_id="table01",
                      plugins=[PluginMeta(id="param_map",
                                          configs=[Config(name="aa", value="a"), Config(name="bb", value="b")])],
                      args=["aa", "bb"],
-                     args_schema=UserInfo.model_json_schema(),
+                     args_schema=UserInfo02.model_json_schema(),
+                     data_schema=None,
                      configs=None,
                      sub_tasks=[api_user_info])
 

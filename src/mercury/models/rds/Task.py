@@ -11,6 +11,7 @@ class Task(BaseModel):
     plugins: list[PluginMeta] | None
     args: list[str] | None
     args_schema: dict | None
+    data_schema: dict | None
     configs: list[Config] | None
     sub_tasks: list["Task"] | None
 

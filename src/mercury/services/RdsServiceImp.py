@@ -33,6 +33,8 @@ class RdsServiceImp(RdsService):
         else:
             self.__content.data = []
         self.__content.sub_params = self.__content.params
+        if self.__rds_task.args_schema:
+            validate(instance=self.__params, schema=self.__rds_task.args_schema)
         return await run_dynamic_method(self, f"handle_{t}", self.__content, self.__rds_task)
 
     @override
@@ -56,9 +58,12 @@ class RdsServiceImp(RdsService):
         async def func(content: Content) -> list:
             data = []
             for param in content.params:
-                validate(instance=param, schema=rds_task.args_schema)
+                if rds_task.args_schema:
+                    validate(instance=param, schema=rds_task.args_schema)
                 configs = {_.name: _.value for _ in rds_task.configs}
                 rp = await self.__http_client.request(configs.get("url"), configs.get("method"), param)
+                if rds_task.data_schema:
+                    validate(instance=rp, schema=rds_task.args_schema)
                 data.append(rp)
             return data
 
@@ -113,9 +118,6 @@ class RdsServiceImp(RdsService):
                     raise RuntimeError(f"plugin {meta.id} not found")
         for plugin in plugins:
             plugin.pre(content, parent)
-
-        for param in content.params:
-            validate(instance=param, schema=rds_task.args_schema)
 
         data = await func(content)
 
