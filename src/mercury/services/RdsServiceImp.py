@@ -22,6 +22,7 @@ class RdsServiceImp(RdsService):
         self.__http_client = ctx.http_client
         self.__mongo_client = ctx.mongo_client
         self.__plugins = ctx.rds_plugins
+        self.__api_hosts = ctx.application.setting.api_hosts
         self.__content = Content(type="", params=[self.__params], code=200, msg="", data=None, sub_params=None)
 
     @override
@@ -61,9 +62,13 @@ class RdsServiceImp(RdsService):
                 if rds_task.args_schema:
                     validate(instance=param, schema=rds_task.args_schema)
                 configs = {_.name: _.value for _ in rds_task.configs}
-                rp = await self.__http_client.request(configs.get("url"), configs.get("method"), param)
+                path = configs.get("path")
+                host = configs.get("host", "")
+                host = self.__api_hosts.get(host) if host in self.__api_hosts else host
+                url = f"{host}{path}"
+                rp = await self.__http_client.request(url, configs.get("method"), param)
                 if rds_task.data_schema:
-                    validate(instance=rp, schema=rds_task.args_schema)
+                    validate(instance=rp, schema=rds_task.data_schema)
                 data.append(rp)
             return data
 

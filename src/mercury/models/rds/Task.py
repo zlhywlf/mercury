@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, Field, computed_field
 
 from mercury.models.rds.Config import Config
@@ -14,6 +16,9 @@ class Task(BaseModel):
     data_schema: dict | None
     configs: list[Config] | None
     sub_tasks: list["Task"] | None
+    description: str | None
+    create_time: datetime
+    update_time: datetime
 
     @computed_field
     @property

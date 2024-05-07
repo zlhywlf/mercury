@@ -1,14 +1,18 @@
 import asyncio
+import json
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
+from mercury.models.rds.Task import Task
 from mercury.settings.StarletteSetting import StarletteSetting
 
 
 async def initialize_task_table(tbl_name: str, db: AsyncIOMotorDatabase) -> None:
     """"""
-    await asyncio.sleep(1)
-    print("initialize_task_table")
+    with open("rds_task.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+        data = [Task(**_).model_dump() for _ in data]
+        await db[tbl_name].insert_many(data)
 
 
 async def main() -> None:

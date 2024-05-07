@@ -22,9 +22,16 @@ api_user_info = Task(_id="userInfo",
                      args=["a", "b"],
                      args_schema=UserInfo01.model_json_schema(),
                      data_schema=None,
-                     configs=[Config(name="url", value="https://www.httpbin.org/get"),
-                              Config(name="method", value="GET")],
-                     sub_tasks=None)
+                     configs=[
+                         Config(name="host", value="https://www.httpbin.org"),
+                         Config(name="path", value="/get"),
+                         Config(name="method", value="GET")
+                     ],
+                     sub_tasks=None,
+                     description="description",
+                     create_time="2024-05-07T14:16:07.221931",
+                     update_time="2024-05-07T14:16:07.221931",
+                     )
 
 app_user_info = Task(_id="table01",
                      name="name_table01",
@@ -35,7 +42,11 @@ app_user_info = Task(_id="table01",
                      args_schema=UserInfo02.model_json_schema(),
                      data_schema=None,
                      configs=None,
-                     sub_tasks=[api_user_info])
+                     sub_tasks=[api_user_info],
+                     description="description",
+                     create_time="2024-05-07T14:16:07.221931",
+                     update_time="2024-05-07T14:16:07.221931",
+                     )
 
 fake_config = [
     api_user_info,

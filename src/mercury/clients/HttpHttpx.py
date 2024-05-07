@@ -20,3 +20,9 @@ class HttpHttpx(Http):
     async def get(self, url: str, params: dict) -> Any:
         rp = await self.__client.get(url, params=params)
         return rp.json()
+
+    @override
+    async def post(self, url: str, params: dict) -> Any:
+        """"""
+        rp = await self.__client.post(url, json=params)
+        return rp.json()

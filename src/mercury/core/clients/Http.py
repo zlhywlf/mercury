@@ -14,3 +14,7 @@ class Http(ABC):
     @abstractmethod
     async def get(self, url: str, params: dict) -> Any:
         """"""
+
+    @abstractmethod
+    async def post(self, url: str, params: dict) -> Any:
+        """"""
