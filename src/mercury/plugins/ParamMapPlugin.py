@@ -16,15 +16,12 @@ class ParamMapPlugin(Plugin):
     @override
     def pre(self, current: Content, parent: Content, rds_task: Task) -> None:
         """"""
-        params = []
-        for _ in parent.sub_params:
-            param = {}
-            for k, v in self.__map.items():
-                if k not in _:
-                    continue
-                param[v] = _[k]
-            params.append(param)
-        current.params = params
+        param = {}
+        for k, v in self.__map.items():
+            if k not in parent.sub_param:
+                continue
+            param[v] = parent.sub_param[k]
+        current.param = param
 
     @classmethod
     @override

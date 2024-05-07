@@ -13,29 +13,29 @@ from mercury.utils.ModuleUtil import run_dynamic_method
 
 class RdsServiceImp(RdsService):
 
-    def __init__(self, mapper: RdsMapper, params: dict, ctx: AppContext):
+    def __init__(self, mapper: RdsMapper, param: dict, ctx: AppContext):
         """"""
         self.__mapper = mapper
-        self.__app_id = params.pop('appId', None)
-        self.__params = params
+        self.__app_id = param.pop('appId', None)
+        self.__param = param
         self.__rds_task: Task | None = None
         self.__http_client = ctx.http_client
         self.__mongo_client = ctx.mongo_client
         self.__plugins = ctx.rds_plugins
         self.__api_hosts = ctx.application.setting.api_hosts
-        self.__content = Content(type="", params=[self.__params], code=200, msg="", data=None, sub_params=None)
+        self.__content = Content(type="", param=self.__param, code=200, msg="", data=None, sub_param=None)
 
     @override
     async def get_data(self) -> Any:
         t = self.__rds_task.type
         self.__content.type = t
         if t == "subject":
-            self.__content.data = {**self.__params}
+            self.__content.data = {**self.__param}
         else:
             self.__content.data = []
-        self.__content.sub_params = self.__content.params
+        self.__content.sub_param = self.__content.param
         if self.__rds_task.args_schema:
-            validate(instance=self.__params, schema=self.__rds_task.args_schema)
+            validate(instance=self.__param, schema=self.__rds_task.args_schema)
         return await run_dynamic_method(self, f"handle_{t}", self.__content, self.__rds_task)
 
     @override
@@ -58,18 +58,17 @@ class RdsServiceImp(RdsService):
 
         async def func(content: Content) -> list:
             data = []
-            for param in content.params:
-                if rds_task.args_schema:
-                    validate(instance=param, schema=rds_task.args_schema)
-                configs = {_.name: _.value for _ in rds_task.configs}
-                path = configs.get("path")
-                host = configs.get("host", "")
-                host = self.__api_hosts.get(host) if host in self.__api_hosts else host
-                url = f"{host}{path}"
-                rp = await self.__http_client.request(url, configs.get("method"), param)
-                if rds_task.data_schema:
-                    validate(instance=rp, schema=rds_task.data_schema)
-                data.append(rp)
+            if rds_task.args_schema:
+                validate(instance=content.param, schema=rds_task.args_schema)
+            configs = {_.name: _.value for _ in rds_task.configs}
+            path = configs.get("path")
+            host = configs.get("host", "")
+            host = self.__api_hosts.get(host) if host in self.__api_hosts else host
+            url = f"{host}{path}"
+            rp = await self.__http_client.request(url, configs.get("method"), content.param)
+            if rds_task.data_schema:
+                validate(instance=rp, schema=rds_task.data_schema)
+            data.append(rp)
             return data
 
         await self.handle(parent, rds_task, func)
@@ -81,7 +80,7 @@ class RdsServiceImp(RdsService):
         async def func(content: Content) -> list:
 
             data = []
-            content.sub_params = content.params
+            content.sub_param = content.param
 
             async def wrapper(*args) -> None:
                 d = await run_dynamic_method(self, args[0], args[1], args[2])
@@ -113,7 +112,7 @@ class RdsServiceImp(RdsService):
 
     async def handle(self, parent: Content, rds_task: Task, func: Callable) -> None:
         """"""
-        content = Content(type=rds_task.type, params=parent.sub_params, code=200, msg="", data=[], sub_params=None)
+        content = Content(type=rds_task.type, param=parent.sub_param, code=200, msg="", data=[], sub_param=None)
         plugins = []
         if rds_task.plugins:
             for meta in rds_task.plugins:
