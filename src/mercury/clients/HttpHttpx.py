@@ -7,7 +7,7 @@ from mercury.core.Setting import Setting
 from mercury.utils.ModuleUtil import run_dynamic_method
 
 
-class HttpHttpx(Http):
+class HttpHttpx(Http[AsyncClient]):
 
     def __init__(self, setting: Setting):
         super().__init__(setting)
@@ -32,3 +32,9 @@ class HttpHttpx(Http):
     async def close(self) -> None:
         """"""
         await self.__client.aclose()
+
+    @property
+    @override
+    def client(self) -> AsyncClient:
+        """"""
+        return self.__client

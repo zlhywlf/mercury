@@ -4,7 +4,7 @@ from typing import Any
 from mercury.core.Setting import Setting
 
 
-class Http(ABC):
+class Http[T](ABC):
     """"""
 
     def __init__(self, setting: Setting): ...
@@ -23,4 +23,9 @@ class Http(ABC):
 
     @abstractmethod
     async def close(self) -> None:
+        """"""
+
+    @property
+    @abstractmethod
+    def client(self) -> T:
         """"""

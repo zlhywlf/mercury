@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from starlette.testclient import TestClient
+from httpx import AsyncClient
 
 from mercury.core.clients.Mongo import Mongo
 from mercury.core.Setting import Setting
@@ -8,7 +8,7 @@ from mercury.core.Setting import Setting
 
 @dataclass
 class StarletteContext:
-    client: TestClient
+    client: AsyncClient
     rds_auth: dict[str, str]
     db: Mongo
     setting: Setting

@@ -2,9 +2,9 @@ from models.Fake import api_user_info, app_user_info, fake_config
 from models.StarletteContext import StarletteContext
 
 
-def test_hello_world(ctx: StarletteContext):
+async def test_hello_world(ctx: StarletteContext):
     """"""
-    response = ctx.client.get("/")
+    response = await ctx.client.get("/")
     assert response.status_code == 200
     assert response.json() == {"hello": "world"}
 
@@ -18,24 +18,24 @@ async def test_add_rds_config(ctx: StarletteContext):
     assert ret.acknowledged
 
 
-def test_rds_by_get(ctx: StarletteContext):
+async def test_rds_by_get(ctx: StarletteContext):
     """"""
-    response = ctx.client.get("/rds",
-                              params={"appId": app_user_info._id, "aa": "a_str", "bb": "b_str", **ctx.rds_auth})
+    response = await ctx.client.get("/rds",
+                                    params={"appId": app_user_info._id, "aa": "a_str", "bb": "b_str", **ctx.rds_auth})
     assert response.status_code == 200
 
 
-def test_rds_by_post(ctx: StarletteContext):
+async def test_rds_by_post(ctx: StarletteContext):
     """"""
-    response = ctx.client.post("/rds",
-                               params=ctx.rds_auth,
-                               json={"appId": app_user_info._id, "aa": "a_str", "bb": "b_str", })
+    response = await ctx.client.post("/rds",
+                                     params=ctx.rds_auth,
+                                     json={"appId": app_user_info._id, "aa": "a_str", "bb": "b_str", })
     assert response.status_code == 200
 
 
-def test_rds_new_task(ctx: StarletteContext):
+async def test_rds_new_task(ctx: StarletteContext):
     """"""
-    response = ctx.client.post("/rds", json={
+    response = await ctx.client.post("/rds", json={
         "appId": api_user_info._id,
         "a": "a_str",
         "b": "b_str",
