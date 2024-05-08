@@ -1,11 +1,17 @@
 from abc import ABC, abstractmethod
 
+from mercury.core.Setting import Setting
 
-class Mongo(ABC):
+
+class Mongo[T](ABC):
     """"""
 
-    def __init__(self, **kwargs): ...
+    def __init__(self, setting: Setting): ...
 
     @abstractmethod
-    def get_db_by_name(self, name: str):
+    async def get_db_by_name(self, name: str) -> T:
+        """"""
+
+    @abstractmethod
+    async def close(self) -> None:
         """"""

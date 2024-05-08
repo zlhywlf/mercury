@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from mercury.core.Context import Context
 from mercury.core.Launch import Launch
 from mercury.core.Setting import Setting
 
@@ -27,4 +28,9 @@ class Application(Launch, ABC):
     @property
     @abstractmethod
     def platform(self) -> str:
+        """"""
+
+    @property
+    @abstractmethod
+    def context(self) -> Context:
         """"""

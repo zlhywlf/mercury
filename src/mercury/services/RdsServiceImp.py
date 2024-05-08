@@ -3,9 +3,9 @@ from typing import Any, Callable, override
 from anyio import create_task_group
 from jsonschema import validate
 
+from mercury.core.Context import Context
 from mercury.core.mappers.RdsMapper import RdsMapper
 from mercury.core.services.RdsService import RdsService
-from mercury.models.AppContext import AppContext
 from mercury.models.rds.Content import Content
 from mercury.models.rds.Task import Task
 from mercury.utils.ModuleUtil import run_dynamic_method
@@ -13,7 +13,7 @@ from mercury.utils.ModuleUtil import run_dynamic_method
 
 class RdsServiceImp(RdsService):
 
-    def __init__(self, mapper: RdsMapper, param: dict, ctx: AppContext):
+    def __init__(self, mapper: RdsMapper, param: dict, ctx: Context):
         """"""
         self.__mapper = mapper
         self.__app_id = param.pop('appId', None)

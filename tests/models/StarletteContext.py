@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from motor.motor_asyncio import AsyncIOMotorDatabase
 from starlette.testclient import TestClient
 
+from mercury.core.clients.Mongo import Mongo
 from mercury.core.Setting import Setting
 
 
@@ -10,5 +10,5 @@ from mercury.core.Setting import Setting
 class StarletteContext:
     client: TestClient
     rds_auth: dict[str, str]
-    db: AsyncIOMotorDatabase
+    db: Mongo
     setting: Setting

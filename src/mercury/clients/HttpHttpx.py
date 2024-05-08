@@ -3,14 +3,15 @@ from typing import Any, override
 from httpx import AsyncClient
 
 from mercury.core.clients.Http import Http
+from mercury.core.Setting import Setting
 from mercury.utils.ModuleUtil import run_dynamic_method
 
 
 class HttpHttpx(Http):
 
-    def __init__(self, *, client: AsyncClient):
-        super().__init__()
-        self.__client = client
+    def __init__(self, setting: Setting):
+        super().__init__(setting)
+        self.__client = AsyncClient()
 
     @override
     async def request(self, url: str, method: str, params: dict) -> Any:
@@ -26,3 +27,8 @@ class HttpHttpx(Http):
         """"""
         rp = await self.__client.post(url, json=params)
         return rp.json()
+
+    @override
+    async def close(self) -> None:
+        """"""
+        await self.__client.aclose()
