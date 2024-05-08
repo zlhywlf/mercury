@@ -52,4 +52,4 @@ class ApplicationBuilder:
             raise RuntimeError(f'Application {self.__app_cls} has no mongo_client')
         ctx = self.__context_cls(http_client=self.__http_client, mongo_client=self.__mongo_client,
                                  rds_plugins=self.__rds_plugins, setting=self.__setting)
-        return self.__app_cls(lifespan=ctx, setting=self.__setting, controllers=self.__controllers)
+        return self.__app_cls(lifespan=ctx, controllers=self.__controllers)

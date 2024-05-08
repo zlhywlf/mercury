@@ -18,7 +18,7 @@ async def ctx() -> Generator[StarletteContext, Any, None]:
         async with AsyncClient(transport=ASGITransport(app=manager.app), base_url="http://127.0.0.1:8000") as client:
             yield StarletteContext(client=client,
                                    rds_auth={"userId": user_id,
-                                             "userKey": encrypt_by_md5(user_id + "+", app.setting.rds_key)},
+                                             "userKey": encrypt_by_md5(user_id + "+", app.context.setting.rds_key)},
                                    context=app.context)
 
 

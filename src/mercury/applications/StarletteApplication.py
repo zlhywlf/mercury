@@ -9,16 +9,14 @@ from starlette.routing import Route
 from mercury.core.Application import Application
 from mercury.core.Context import Context
 from mercury.core.Controller import Controller
-from mercury.core.Setting import Setting
 from mercury.factories.EngineFactory import EngineFactory
 from mercury.utils.ControllerUtil import yield_controllers
 
 
 class StarletteApplication(Application):
 
-    def __init__(self, *, lifespan: Context, setting: Setting, controllers: list[type[Controller]], ):
+    def __init__(self, *, lifespan: Context, controllers: list[type[Controller]], ):
         super().__init__()
-        self.__setting = setting
         self.__platform = platform.system()
         self.__has_launch = False
         self.__context = lifespan
@@ -37,11 +35,6 @@ class StarletteApplication(Application):
 
     @property
     @override
-    def setting(self) -> Setting:
-        return self.__setting
-
-    @property
-    @override
     def platform(self) -> str:
         return self.__platform
 
@@ -57,6 +50,6 @@ class StarletteApplication(Application):
                        send: Callable[[MutableMapping[str, Any]], Awaitable[None]]) -> None:
         """"""
         await Starlette(
-            debug=self.__setting.is_debug,
+            debug=self.context.setting.is_debug,
             lifespan=self.__context,
             routes=self.__routes).__call__(scope, receive, send)

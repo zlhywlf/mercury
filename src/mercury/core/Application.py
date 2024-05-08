@@ -3,7 +3,6 @@ from typing import Any, Awaitable, Callable, MutableMapping
 
 from mercury.core.Context import Context
 from mercury.core.Launch import Launch
-from mercury.core.Setting import Setting
 
 
 class Application(Launch, ABC):
@@ -14,11 +13,6 @@ class Application(Launch, ABC):
     async def __call__(self, scope: MutableMapping[str, Any],
                        receive: Callable[[], Awaitable[MutableMapping[str, Any]]],
                        send: Callable[[MutableMapping[str, Any]], Awaitable[None]]) -> None:
-        """"""
-
-    @property
-    @abstractmethod
-    def setting(self) -> Setting:
         """"""
 
     @property
