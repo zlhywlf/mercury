@@ -11,8 +11,8 @@ async def test_hello_world(ctx: StarletteContext):
 
 async def test_add_rds_config(ctx: StarletteContext):
     """"""
-    tbl_name = ctx.setting.rds_task_table_name
-    db = await ctx.db.get_db_by_name(ctx.setting.project_name)
+    tbl_name = ctx.context.setting.rds_task_table_name
+    db = await ctx.context.mongo_client.get_db_by_name(ctx.context.setting.project_name)
     await db.drop_collection(tbl_name)
     ret = await db[tbl_name].insert_many([_.model_dump() for _ in fake_config])
     assert ret.acknowledged
