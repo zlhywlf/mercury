@@ -4,11 +4,12 @@ from typing import Self
 from mercury.core.clients.Http import Http
 from mercury.core.clients.Mongo import Mongo
 from mercury.core.Plugin import Plugin
+from mercury.core.Setting import Setting
 
 
 class Context[T](ABC):
 
-    def __init__(self, *, http_client: Http, mongo_client: Mongo,
+    def __init__(self, *, setting: Setting, http_client: Http, mongo_client: Mongo,
                  rds_plugins: dict[str, type[Plugin]]): ...
 
     @abstractmethod
@@ -41,4 +42,9 @@ class Context[T](ABC):
     @property
     @abstractmethod
     def rds_plugins(self) -> dict[str, type[Plugin]]:
+        """"""
+
+    @property
+    @abstractmethod
+    def setting(self) -> Setting:
         """"""

@@ -22,7 +22,7 @@ class RdsServiceImp(RdsService):
         self.__http_client = ctx.http_client
         self.__mongo_client = ctx.mongo_client
         self.__plugins = ctx.rds_plugins
-        self.__api_hosts = ctx.application.setting.api_hosts
+        self.__api_hosts = ctx.setting.api_hosts
         self.__content = Content(type="", param=self.__param, code=200, msg="", data=None, sub_param=None)
 
     @override

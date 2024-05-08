@@ -1,6 +1,5 @@
-import contextlib
 import platform
-from typing import Callable, override
+from typing import Any, Awaitable, Callable, MutableMapping, override
 
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
@@ -15,17 +14,18 @@ from mercury.factories.EngineFactory import EngineFactory
 from mercury.utils.ControllerUtil import yield_controllers
 
 
-class StarletteApplication(Starlette, Application):
+class StarletteApplication(Application):
 
-    def __init__(self, *, lifespan: Callable | Context, setting: Setting, controllers: list[type[Controller]], ):
+    def __init__(self, *, lifespan: Context, setting: Setting, controllers: list[type[Controller]], ):
+        super().__init__()
         self.__setting = setting
         self.__platform = platform.system()
         self.__has_launch = False
         self.__context = lifespan
-        routes: list[Route] = [Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET'])]
+        self.__routes: list[Route] = [Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET'])]
         for meta in yield_controllers(controllers):
-            routes.append(Route(meta.path, meta.controller, middleware=[Middleware(_) for _ in meta.middlewares]))
-        Starlette.__init__(self, debug=setting.is_debug, lifespan=lifespan, routes=routes)
+            self.__routes.append(
+                Route(meta.path, meta.controller, middleware=[Middleware(_) for _ in meta.middlewares]))
 
     @override
     def launch(self) -> None:
@@ -50,3 +50,13 @@ class StarletteApplication(Starlette, Application):
     def context(self) -> Context:
         """"""
         return self.__context
+
+    @override
+    async def __call__(self, scope: MutableMapping[str, Any],
+                       receive: Callable[[], Awaitable[MutableMapping[str, Any]]],
+                       send: Callable[[MutableMapping[str, Any]], Awaitable[None]]) -> None:
+        """"""
+        await Starlette(
+            debug=self.__setting.is_debug,
+            lifespan=self.__context,
+            routes=self.__routes).__call__(scope, receive, send)

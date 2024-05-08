@@ -17,9 +17,9 @@ class RdsMiddleware(BaseHTTPMiddleware):
     @override
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         ctx: Context = request.state.ctx
-        db = await ctx.mongo_client.get_db_by_name(ctx.application.setting.project_name)
-        mapper = AsyncRdsMapperImp(db, ctx.application.setting)
-        rds_key = ctx.application.setting.rds_key
+        db = await ctx.mongo_client.get_db_by_name(ctx.setting.project_name)
+        mapper = AsyncRdsMapperImp(db, ctx.setting)
+        rds_key = ctx.setting.rds_key
         body = await request.body()
         json_params = orjson.loads(body) if body else {}
         params = {**request.path_params, **request.query_params, **json_params}

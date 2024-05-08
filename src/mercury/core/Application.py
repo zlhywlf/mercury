@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any, Awaitable, Callable, MutableMapping
 
 from mercury.core.Context import Context
 from mercury.core.Launch import Launch
@@ -9,21 +10,16 @@ class Application(Launch, ABC):
 
     def __init__(self, **kwargs): ...
 
-    def __call__(self) -> None: ...
-
-    # @property
-    # @abstractmethod
-    # def instance(self) -> Callable:
-    #     """"""
+    @abstractmethod
+    async def __call__(self, scope: MutableMapping[str, Any],
+                       receive: Callable[[], Awaitable[MutableMapping[str, Any]]],
+                       send: Callable[[MutableMapping[str, Any]], Awaitable[None]]) -> None:
+        """"""
 
     @property
     @abstractmethod
     def setting(self) -> Setting:
         """"""
-
-    # @abstractmethod
-    # def add_route(self, path: str, endpoint: Callable, **kwargs) -> None:
-    #     """"""
 
     @property
     @abstractmethod
