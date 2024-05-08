@@ -2,7 +2,8 @@ import os
 from typing import Any, Generator
 
 from asgi_lifespan import LifespanManager
-from httpx import ASGITransport, AsyncClient
+from httpx import ASGITransport, AsyncClient, MockTransport
+from mock.HttpxMock import HttpxMock
 from models.StarletteContext import StarletteContext
 from pytest import fixture
 
@@ -14,6 +15,7 @@ from mercury.utils.EncryptionUtil import encrypt_by_md5
 async def ctx() -> Generator[StarletteContext, Any, None]:
     os.chdir(os.path.join(os.path.dirname(__file__), ".."))
     user_id = "test-user"
+    app.context.http_client.client = AsyncClient(transport=MockTransport(HttpxMock()))
     async with LifespanManager(app) as manager:
         async with AsyncClient(transport=ASGITransport(app=manager.app), base_url="http://127.0.0.1:8000") as client:
             yield StarletteContext(client=client,

@@ -29,3 +29,8 @@ class Http[T](ABC):
     @abstractmethod
     def client(self) -> T:
         """"""
+
+    @client.setter
+    @abstractmethod
+    def client(self, client: T) -> None:
+        """"""

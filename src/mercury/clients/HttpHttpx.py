@@ -38,3 +38,9 @@ class HttpHttpx(Http[AsyncClient]):
     def client(self) -> AsyncClient:
         """"""
         return self.__client
+
+    @client.setter
+    @override
+    def client(self, client: AsyncClient) -> None:
+        """"""
+        self.__client = client
