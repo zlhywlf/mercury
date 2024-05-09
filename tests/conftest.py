@@ -8,7 +8,7 @@ from pytest import fixture
 from mercury.app import app
 from mercury.utils.EncryptionUtil import encrypt_by_md5
 
-from .fakes.TaskFake import task_data
+from .mocks.fakes.TaskFake import task_data
 from .mocks.HttpxMock import HttpxMock
 from .mocks.MongoMock import MongoMock
 from .models.TestContext import TestContext

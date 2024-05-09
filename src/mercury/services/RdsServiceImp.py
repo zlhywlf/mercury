@@ -1,5 +1,6 @@
 from typing import Any, Callable, override
 
+import orjson
 from anyio import create_task_group
 from jsonschema import validate
 
@@ -22,7 +23,6 @@ class RdsServiceImp(RdsService):
         self.__http_client = ctx.http_client
         self.__mongo_client = ctx.mongo_client
         self.__plugins = ctx.rds_plugins
-        self.__api_hosts = ctx.setting.api_hosts
         self.__content = Content(type="", param=self.__param, code=200, msg="", data=None, sub_param=None)
 
     @override
@@ -35,7 +35,7 @@ class RdsServiceImp(RdsService):
             self.__content.data = []
         self.__content.sub_param = self.__content.param
         if self.__rds_task.args_schema:
-            validate(instance=self.__param, schema=self.__rds_task.args_schema)
+            validate(instance=self.__param, schema=orjson.loads(self.__rds_task.args_schema))
         return await run_dynamic_method(self, f"handle_{t}", self.__content, self.__rds_task)
 
     @override
@@ -59,15 +59,14 @@ class RdsServiceImp(RdsService):
         async def func(content: Content) -> list:
             data = []
             if rds_task.args_schema:
-                validate(instance=content.param, schema=rds_task.args_schema)
+                validate(instance=content.param, schema=orjson.loads(rds_task.args_schema))
             configs = {_.name: _.value for _ in rds_task.configs}
             path = configs.get("path")
             host = configs.get("host", "")
-            host = self.__api_hosts.get(host) if host in self.__api_hosts else host
             url = f"{host}{path}"
             rp = await self.__http_client.request(url, configs.get("method"), content.param)
             if rds_task.data_schema:
-                validate(instance=rp, schema=rds_task.data_schema)
+                validate(instance=rp, schema=orjson.loads(rds_task.data_schema))
             data.append(rp)
             return data
 

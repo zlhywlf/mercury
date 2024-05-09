@@ -31,8 +31,3 @@ class Setting(ABC):
     @abstractmethod
     def project_name(self) -> str:
         """"""
-
-    @property
-    @abstractmethod
-    def api_hosts(self) -> dict:
-        """"""

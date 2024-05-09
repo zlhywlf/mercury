@@ -3,7 +3,6 @@ from typing import override
 from starlette.config import Config
 
 from mercury.core.Setting import Setting
-from mercury.utils.SettingUtil import cast_dict
 
 
 class StarletteSetting(Setting):
@@ -43,9 +42,3 @@ class StarletteSetting(Setting):
     def project_name(self) -> str:
         """"""
         return self._config("PROJECT_NAME", cast=str, default="mercury")
-
-    @property
-    @override
-    def api_hosts(self) -> dict:
-        """"""
-        return self._config("API_HOSTS", cast=cast_dict, default={})

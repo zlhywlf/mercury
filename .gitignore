@@ -8,5 +8,5 @@ __pycache__
 .pytest_cache
 .env
 .mypy_cache
-.coverage
+.coverage*
 *.json
