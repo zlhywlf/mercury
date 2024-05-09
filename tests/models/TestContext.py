@@ -6,7 +6,7 @@ from mercury.core.Context import Context
 
 
 @dataclass
-class StarletteContext:
+class TestContext:
     client: AsyncClient
     rds_auth: dict[str, str]
     context: Context

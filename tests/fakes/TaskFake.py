@@ -47,8 +47,7 @@ app_user_info = Task(_id="table01",
                      create_time="2024-05-07T14:16:07.221931",
                      update_time="2024-05-07T14:16:07.221931",
                      )
-
-fake_config = [
-    api_user_info,
-    app_user_info
+task_data = [
+    api_user_info.model_dump(),
+    app_user_info.model_dump(),
 ]

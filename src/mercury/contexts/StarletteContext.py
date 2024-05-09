@@ -63,3 +63,9 @@ class StarletteContext(Context[Starlette]):
     def setting(self) -> Setting:
         """"""
         return self.__setting
+
+    @mongo_client.setter
+    @override
+    def mongo_client(self, mongo_client: Mongo) -> None:
+        """"""
+        self.__mongo_client = mongo_client

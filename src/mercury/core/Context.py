@@ -48,3 +48,8 @@ class Context[T](ABC):
     @abstractmethod
     def setting(self) -> Setting:
         """"""
+
+    @mongo_client.setter
+    @abstractmethod
+    def mongo_client(self, mongo_client: Mongo) -> None:
+        """"""
