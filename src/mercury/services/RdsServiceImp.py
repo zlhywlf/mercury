@@ -17,7 +17,7 @@ class RdsServiceImp(RdsService):
     def __init__(self, mapper: RdsMapper, param: dict, ctx: Context):
         """"""
         self.__mapper = mapper
-        self.__app_id = param.pop('appId', None)
+        self.__app_id = param.pop("appId", None)
         self.__param = param
         self.__rds_task: Task | None = None
         self.__http_client = ctx.http_client

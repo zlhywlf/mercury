@@ -15,21 +15,27 @@ from mercury.utils.ControllerUtil import yield_controllers
 
 class StarletteApplication(Application):
 
-    def __init__(self, *, lifespan: Context, controllers: list[type[Controller]], ):
+    def __init__(
+        self,
+        *,
+        lifespan: Context,
+        controllers: list[type[Controller]],
+    ):
         super().__init__()
         self.__platform = platform.system()
         self.__has_launch = False
         self.__context = lifespan
-        self.__routes: list[Route] = [Route('/', lambda request: JSONResponse({'hello': 'world'}), methods=['GET'])]
+        self.__routes: list[Route] = [Route("/", lambda request: JSONResponse({"hello": "world"}), methods=["GET"])]
         for meta in yield_controllers(controllers):
             self.__routes.append(
-                Route(meta.path, meta.controller, middleware=[Middleware(_) for _ in meta.middlewares]))
+                Route(meta.path, meta.controller, middleware=[Middleware(_) for _ in meta.middlewares])
+            )
 
     @override
     def launch(self) -> None:
         if not self.__has_launch:
             if not (engine := EngineFactory.create_engine(self)):
-                raise RuntimeError('Starlette engine is not initialized')
+                raise RuntimeError("Starlette engine is not initialized")
             engine.launch()
             self.__has_launch = True
 
@@ -45,11 +51,13 @@ class StarletteApplication(Application):
         return self.__context
 
     @override
-    async def __call__(self, scope: MutableMapping[str, Any],
-                       receive: Callable[[], Awaitable[MutableMapping[str, Any]]],
-                       send: Callable[[MutableMapping[str, Any]], Awaitable[None]]) -> None:
+    async def __call__(
+        self,
+        scope: MutableMapping[str, Any],
+        receive: Callable[[], Awaitable[MutableMapping[str, Any]]],
+        send: Callable[[MutableMapping[str, Any]], Awaitable[None]],
+    ) -> None:
         """"""
-        await Starlette(
-            debug=self.context.setting.is_debug,
-            lifespan=self.__context,
-            routes=self.__routes).__call__(scope, receive, send)
+        await Starlette(debug=self.context.setting.is_debug, lifespan=self.__context, routes=self.__routes).__call__(
+            scope, receive, send
+        )

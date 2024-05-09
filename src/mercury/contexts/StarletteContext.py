@@ -11,8 +11,9 @@ from mercury.core.Setting import Setting
 
 class StarletteContext(Context[Starlette]):
 
-    def __init__(self, *, setting: Setting, http_client: Http, mongo_client: Mongo,
-                 rds_plugins: dict[str, type[Plugin]]):
+    def __init__(
+        self, *, setting: Setting, http_client: Http, mongo_client: Mongo, rds_plugins: dict[str, type[Plugin]]
+    ):
         super().__init__(setting=setting, http_client=http_client, mongo_client=mongo_client, rds_plugins=rds_plugins)
         self.__application: Starlette | None = None
         self.__http_client = http_client

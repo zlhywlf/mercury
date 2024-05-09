@@ -9,8 +9,9 @@ from mercury.core.Setting import Setting
 
 class Context[T](ABC):
 
-    def __init__(self, *, setting: Setting, http_client: Http, mongo_client: Mongo,
-                 rds_plugins: dict[str, type[Plugin]]): ...
+    def __init__(
+        self, *, setting: Setting, http_client: Http, mongo_client: Mongo, rds_plugins: dict[str, type[Plugin]]
+    ): ...
 
     @abstractmethod
     async def __aenter__(self) -> dict[str, Self]:

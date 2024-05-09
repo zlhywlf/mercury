@@ -10,7 +10,7 @@ def get_modules(pkg: str) -> Generator[ModuleType | None, Any, None]:
 
     def get_module(module_meta: Traversable) -> ModuleType | None:
         """"""
-        name, point, suffix = module_meta.name.rpartition('.')
+        name, point, suffix = module_meta.name.rpartition(".")
         if not module_meta.is_file() or suffix != "py":
             return None
         try:
@@ -36,5 +36,5 @@ async def run_dynamic_method(obj: object, name: str, *args: Any, **kwargs: Any) 
     """"""
     handler = getattr(obj, name)
     if not handler:
-        raise RuntimeError(f'{name} not supported')
+        raise RuntimeError(f"{name} not supported")
     return await handler(*args, **kwargs)

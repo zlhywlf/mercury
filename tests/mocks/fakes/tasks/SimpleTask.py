@@ -33,14 +33,7 @@ class SimpleTaskResponse(BaseModel):
     msg: str | None
 
 
-exp = ("[].data.items[].{"
-       "str: a,"
-       "int: b,"
-       "float: c,"
-       "list: d,"
-       "dict: e,"
-       "date: f,"
-       ).strip(",") + "}"
+exp = ("[].data.items[].{" "str: a," "int: b," "float: c," "list: d," "dict: e," "date: f,").strip(",") + "}"
 
 simple_task = Task(
     _id="simple_task",
@@ -70,18 +63,5 @@ def handle(arg: str, **kwargs) -> SimpleTaskResponse:
 simple_task_response_200 = SimpleTaskResponse(
     code=200,
     msg="",
-    data=SimpleTaskData(
-        num=1,
-        total=1,
-        items=[
-            SimpleTaskItem(
-                a="string",
-                b=100,
-                c=1.1,
-                d=[],
-                e={},
-                f=date.today()
-            )
-        ]
-    )
+    data=SimpleTaskData(num=1, total=1, items=[SimpleTaskItem(a="string", b=100, c=1.1, d=[], e={}, f=date.today())]),
 ).model_dump_json()

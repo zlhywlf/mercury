@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 
 class Content(BaseModel):
     """"""
+
     param: dict = Field(..., exclude=True)
     type: str = Field(..., exclude=True)
     code: int
