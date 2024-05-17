@@ -33,7 +33,7 @@ dependencies = [
 "Homepage" = "https://github.com/zlhywlf"
 
 [project.scripts]
-aries = "mercury.__main__:main"
+mercury = "mercury.__main__:main"
 
 [tool.hatch.version]
 source = "vcs"
