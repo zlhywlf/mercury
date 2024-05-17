@@ -6,9 +6,6 @@ from mercury.core.Launch import Launch
 
 
 class Application(Launch, ABC):
-
-    def __init__(self, **kwargs): ...
-
     @abstractmethod
     async def __call__(
         self,

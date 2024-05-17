@@ -4,9 +4,8 @@
 dist
 __pycache__
 *.iml
-*.egg-info
 .pytest_cache
-.env
 .mypy_cache
 .coverage*
 *.json
+.ruff_cache
