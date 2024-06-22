@@ -1,0 +1,7 @@
+build~=1.2.0 # https://build.pypa.io/
+mypy~=1.10.0 # https://mypy.readthedocs.io/en/stable/
+pre-commit~=3.7.1 # https://pre-commit.com/
+pytest~=8.2.0 # https://docs.pytest.org/
+pytest-cov~=5.0.0 # https://pytest-cov.readthedocs.io/
+pytest-env~=1.1.0 # https://pypi.org/project/pytest-env/
+ruff~=0.4.0 # https://docs.astral.sh/ruff/
