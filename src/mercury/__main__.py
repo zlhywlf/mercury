@@ -17,3 +17,7 @@ def main(**kwargs: Any) -> None:
     if kwargs["version"]:
         print(version)  # noqa: T201
         return
+
+
+if __name__ == "__main__":
+    main()
