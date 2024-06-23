@@ -3,22 +3,20 @@
 Copyright (c) 2023-present 善假于PC也 (zlhywlf) .
 """
 
-import uvicorn
-from starlette.applications import Starlette
-from starlette.responses import JSONResponse
-from starlette.routing import Route
+from typing import Any
+
+import click
+
+from mercury._version import version
 
 
-def main() -> None:
+@click.command()
+@click.option("-V", "--version", is_flag=True, help="Show program's version number and exit")
+def main(**kwargs: Any) -> None:
     """Launcher."""
-    uvicorn.run(
-        Starlette(
-            debug=True,
-            routes=[
-                Route("/", lambda request: JSONResponse({"hello": "mercury"}))  # noqa: ARG005
-            ],
-        )
-    )  # pragma: no cover
+    if kwargs["version"]:
+        print(version)  # noqa: T201
+        return
 
 
 if __name__ == "__main__":
